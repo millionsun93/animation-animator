@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>Android Animation</h1>
+					<p>
+						by Ethan @ Innovatube
+					</p>
+					
+				</section>
+				<section data-markdown>
+					<script type="text/template">
+					### The Android framework provides two animation systems:
+					- View animation
+					- Property Animation
+					</script>
+				</section>
+				<section>
+					<h2>View Animation</h2>
+					<blockquote>
+						View Animation is the older system and can only be used for Views. It is relatively easy to setup and offers enough capabilities to meet many application's needs such as 'alpha, scale, translate, rotate'
+					</blockquote>
+				</section>
+				<section>
+					<h2>View Animation offers</h2>
+					<div class="row">
+						<div style="float: left">
+							<ul>
+								<li>Animation Type</li>
+								<li>Duration</li>
+								<li>Interpolator</li>
+								<li>Repeat count</li>
+								<li>Repeat mode</li>
+							</ul>
+						</div>
+						<div style="float: right">
+							<img src="img/interpolators2.png">
+						</div>
+					</div>
+				</section>
+				<section>
+					<h2>Implement View Animation</h2>
+							<h4>By code</h4>
+							    <pre><code data-trim data-noescape>
+AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+alphaAnimation.setDuration(1000);
+alphaAnimation.setRepeatMode(Animation.REVERSE);
+alphaAnimation.setRepeatCount(1);
+alphaAnimation.setFillAfter(true);
+							</code></pre>
+							<h4>By XML</h4>
+							    <pre><code data-trim data-noescape>
+&lt;alpha
+        android:duration="1000"
+        android:fillAfter="true"
+        android:fromAlpha="0"
+        android:repeatCount="1"
+        android:repeatMode="reverse"
+        android:toAlpha="1" /&gt;
+							</code></pre>
+				</section>
+				<section>
+					<h2>XML syntax of ViewAnimation</h2>
+							    <pre><code data-trim data-noescape>
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@[package:]anim/interpolator_resource"
+    android:shareInterpolator=["true" | "false"] &gt;
+    &lt;alpha
+        android:fromAlpha="float"
+        android:toAlpha="float" /&gt;
+    &lt;scale
+        android:fromXScale="float"
+        android:toXScale="float"
+        android:fromYScale="float"
+        android:toYScale="float"
+        android:pivotX="float"
+        android:pivotY="float" /&gt;
+    &lt;translate
+        android:fromXDelta="float"
+        android:toXDelta="float"
+        android:fromYDelta="float"
+        android:toYDelta="float" /&gt;
+    &lt;rotate
+        android:fromDegrees="float"
+        android:toDegrees="float"
+        android:pivotX="float"
+        android:pivotY="float" /&gt;
+    &lt;set&gt;
+        ...
+    &lt;/set&gt;
+&lt;/set&gt;
+							</code></pre>
+				</section>
+
+				<section>
+					<h2>View Animation's disadvantages</h2>
+					<div class="row">
+						<div style="float: left">
+							<ul>
+								<li>Apply to view only </li>
+								<li>Simple transformations </li>
+								<li>It only modified where the View<br> was drawn, and not the actual <br>View itself.</li>
+							</ul>
+						</div>
+						<div style="float: right">
+							<img src="img/translation.png"  width="320" height="480">
+						</div>
+					</div>
+				</section>
+				<section>
+					<h2>View Animation Example</h2>
+					<video data-autoplay class="stretch" src="video/view.mp4"></video>
+				</section>
+				<section>
+					<h2>Property Animaton</h2>
+					<div class="row">
+						<div style="float: left">
+							<ol>
+							<li>Introduced in Android 3.0</li>
+							<li>Animate properties of any object</li>
+							<li>ValueAnimator</li>
+							<li>ObjectAnimator</li>
+							<li>AnimatorSet</li>
+							<ol>
+						</div>
+						<div style="float: right">
+							<img src="img/animation-linear.png"  width="320" height="140">
+						</div>
+					</div>
+				</section>
+				<section>
+					<h2>Evaluators</h2>
+					<div class="row">
+						<div style="float: left">
+							<ol>
+							<li>IntEvaluator</li>
+							<li>FloatEvaluator</li>
+							<li>ArgbEvaluator</li>
+							<li>TypeEvaluator</li>
+							<ol>
+						</div>
+						<div style="float: right">
+							<pre><code data-trim data-noescape>
+								public Object evaluate(float fraction, Object startValue, Object endValue) {
+        int startInt = (Integer) startValue;
+        int startA = (startInt >> 24) & 0xff;
+        int startR = (startInt >> 16) & 0xff;
+        int startG = (startInt >> 8) & 0xff;
+        int startB = startInt & 0xff;
+
+        int endInt = (Integer) endValue;
+        int endA = (endInt >> 24) & 0xff;
+        int endR = (endInt >> 16) & 0xff;
+        int endG = (endInt >> 8) & 0xff;
+        int endB = endInt & 0xff;
+
+        return (int)((startA + (int)(fraction * (endA - startA))) << 24) |
+                (int)((startR + (int)(fraction * (endR - startR))) << 16) |
+                (int)((startG + (int)(fraction * (endG - startG))) << 8) |
+                (int)((startB + (int)(fraction * (endB - startB))));
+    }
+							</code></pre>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h2>Animating with ValueAnimator</h2>
+					<div class="row">
+							The ValueAnimator class lets you animate values of some type for the duration of an animation by specifying a set of int, float, or color values to animate through.
+						<pre><code data-trim data-noescape>
+							ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
+        animator.setDuration(2000);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mAndroid.setAlpha((Float) animation.getAnimatedValue());
+            }
+        });
+        animator.start();
+						</code></pre>
+					</div>
+				</section>
+				<section>
+					<h2>Animating with ObjectAnimator</h2>
+					<div class="row">
+							ObjectAnimator is ValueAnimator with target to animate.
+						<pre><code data-trim data-noescape>
+							 ObjectAnimator animator = ObjectAnimator.ofObject(mAnimationView, "backgroundColor",
+                new ArgbEvaluator(),
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent));
+animator.setDuration(2000);
+animator.setRepeatCount(1);
+animator.setRepeatMode(ValueAnimator.REVERSE);
+animator.start();
+						</code></pre>
+					</div>
+				</section>
+				<section>
+					<h2>AnimatorSet</h2>
+					<div class="row">
+							AnimatorSet bundles animations together under some conditions.
+						<pre><code data-trim data-noescape>
+							 AnimatorSet animatorSet = new AnimatorSet();
+Animator dropAnimator = ObjectAnimator.ofFloat(mTarget, "translationY", 0, 600);
+dropAnimator.setDuration(500);
+dropAnimator.setInterpolator(new BounceInterpolator());
+dropAnimator.addListener(new AnimatorListenerAdapter() {
+     @Override
+     public void onAnimationEnd(Animator animation) {
+         super.onAnimationEnd(animation);
+         mTarget.setImageResource(R.drawable.beated);
+     }
+});
+Animator cloudDismiss = ObjectAnimator.ofFloat(mCloud, "scaleY", 1, 0);
+cloudDismiss.setDuration(400);
+Animator moveAnimator = ObjectAnimator.ofFloat(mTarget, "translationX", 0, 300);
+moveAnimator.setInterpolator(new AccelerateInterpolator());
+moveAnimator.setDuration(300);
+Animator rollAnimator = ObjectAnimator.ofFloat(mTarget, "rotation", 0, 360);
+rollAnimator.setDuration(150);
+rollAnimator.setInterpolator(new AccelerateInterpolator());
+animatorSet.play(cloudDismiss).before(dropAnimator);
+animatorSet.play(dropAnimator).before(moveAnimator);
+animatorSet.play(moveAnimator).with(rollAnimator);
+animatorSet.start();
+						</code></pre>
+					</div>
+				</section>
+				<section>
+					<h4>XML Syntax of Property Animator</h4>
+					<pre><code data-trim data-noescape>
+						&lt;set
+  android:ordering=["together" | "sequentially"]&gt;
+
+    &lt;objectAnimator
+        android:propertyName="string"
+        android:duration="int"
+        android:valueFrom="float | int | color"
+        android:valueTo="float | int | color"
+        android:startOffset="int"
+        android:repeatCount="int"
+		android:interpolator="interpolator"
+        android:repeatMode=["repeat" | "reverse"]
+        android:valueType=["intType" | "floatType"]/&gt;
+
+    &lt;animator
+        android:duration="int"
+        android:valueFrom="float | int | color"
+        android:valueTo="float | int | color"
+        android:startOffset="int"
+        android:repeatCount="int"
+		android:interpolator="interpolator"
+        android:repeatMode=["repeat" | "reverse"]
+        android:valueType=["intType" | "floatType"]/&gt;
+
+    &lt;set&gt;
+        ...
+    &lt;/set&gt;
+&lt;/set&gt;
+					</code></pre>
+				</section>
+				<section>
+					<h2>Property Animation Example</h2>
+					<video data-autoplay class="stretch" src="video/property.mp4"></video>
+				</section>
+				<section>
+					<h2>Animator Set</h2>
+					<video data-autoplay class="stretch" src="video/animatorset.mp4"></video>
+				</section>
+				<section>
+					<h3> Thank you </h3>
+					<ul>
+						<li>
+						<a href="https://developer.android.com/guide/topics/graphics/prop-animation.html"> View Animation</a>
+						</li>
+						<li>
+						<a href="https://developer.android.com/guide/topics/graphics/prop-animation.html"> Property Animation</a>
+						</li>
+						<li>
+						<a href="https://developer.android.com/guide/topics/graphics/view-animation.html"> Animation Resources</a>
+						</li>
+						<li>
+						<a href="https://github.com/millionsun93/animation-animator/">Github</a>
+						</li>
+					</ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
